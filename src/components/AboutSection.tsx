@@ -113,7 +113,7 @@ export default function AboutSection() {
                 </div>
 
                 {/* Description — always visible on desktop, toggle on mobile */}
-                <div className={`overflow-hidden transition-all duration-300 lg:block ${isOpen ? 'max-h-48' : 'max-h-0 lg:max-h-none'}`}>
+                <div className={`overflow-hidden transition-all duration-300 lg:block ${isOpen ? 'max-h-96' : 'max-h-0 lg:max-h-none'}`}>
                   <p className="font-serif text-cream-100/65 text-base leading-relaxed group-hover:text-cream-100/85 transition-colors duration-300">
                     {feature.description}
                   </p>
