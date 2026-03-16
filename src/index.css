@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --soot: #0f0d0a;
+  --ember: #ea580c;
+  --ember-glow: #f59e0b;
+  --cream: #fffbeb;
+  --smoke: #78716c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Crimson Pro', Georgia, serif;
+  background: var(--soot);
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Noise grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Grill mark diagonal pattern */
+.grill-divider {
+  height: 80px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(234, 88, 12, 0.08) 8px,
+    rgba(234, 88, 12, 0.08) 10px
+  );
+  position: relative;
+}
+
+.grill-divider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    var(--soot) 0%,
+    transparent 15%,
+    transparent 85%,
+    var(--soot) 100%
+  );
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f0d0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #3d362e;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ea580c;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(234, 88, 12, 0.3);
+  color: #fffbeb;
+}
+
+/* Stagger animation delays via data attribute */
+[data-delay="1"] { animation-delay: 0.1s; }
+[data-delay="2"] { animation-delay: 0.2s; }
+[data-delay="3"] { animation-delay: 0.3s; }
+[data-delay="4"] { animation-delay: 0.4s; }
+[data-delay="5"] { animation-delay: 0.5s; }
+[data-delay="6"] { animation-delay: 0.6s; }
+
+@layer utilities {
+  .text-shadow-fire {
+    text-shadow: 0 0 40px rgba(234, 88, 12, 0.3), 0 0 80px rgba(245, 158, 11, 0.15);
+  }
+  .text-shadow-sm {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  }
+}
