@@ -1,4 +1,5 @@
-import { Flame, UtensilsCrossed, Truck, ShieldCheck } from 'lucide-react'
+import { useState } from 'react'
+import { Flame, UtensilsCrossed, Truck, ShieldCheck, ChevronDown } from 'lucide-react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const features = [
@@ -33,6 +34,7 @@ const features = [
 
 export default function AboutSection() {
   const { ref, isVisible } = useScrollReveal()
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
     <section id="over-ons" className="relative bg-soot-900 py-24 sm:py-32 overflow-hidden">
@@ -74,38 +76,51 @@ export default function AboutSection() {
 
         {/* Feature cards — 4 columns side by side from lg */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-0">
-          {features.map((feature, i) => (
-            <div
-              key={feature.title}
-              className={`group relative p-6 lg:p-8 border-cream-50/5 bg-soot-800/30
-                hover:bg-soot-700/40 transition-all duration-500 cursor-default
-                border lg:border-y lg:border-r lg:first:border-l
-                ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-              style={{ transitionDelay: `${0.5 + i * 0.15}s` }}
-            >
-              {/* Top accent line */}
-              <div className={`absolute top-0 left-0 w-10 h-[2px] bg-gradient-to-r ${feature.accent} transition-all duration-500 group-hover:w-full`} />
+          {features.map((feature, i) => {
+            const isOpen = openIndex === i
+            return (
+              <div
+                key={feature.title}
+                onClick={() => setOpenIndex(isOpen ? null : i)}
+                className={`group relative p-6 lg:p-8 border-cream-50/5 bg-soot-800/30
+                  hover:bg-soot-700/40 transition-all duration-500 cursor-pointer lg:cursor-default
+                  border lg:border-y lg:border-r lg:first:border-l
+                  ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+                style={{ transitionDelay: `${0.5 + i * 0.15}s` }}
+              >
+                {/* Top accent line */}
+                <div className={`absolute top-0 left-0 w-10 h-[2px] bg-gradient-to-r ${feature.accent} transition-all duration-500 group-hover:w-full`} />
 
-              {/* Icon */}
-              <div className={`mb-5 transition-colors duration-300 ${
-                feature.accentText
-                  ? 'text-green-400/60 group-hover:text-green-400'
-                  : 'text-ember-500/60 group-hover:text-ember-400'
-              }`}>
-                <feature.icon size={28} strokeWidth={1.5} />
+                {/* Icon */}
+                <div className={`mb-5 transition-colors duration-300 ${
+                  feature.accentText
+                    ? 'text-green-400/60 group-hover:text-green-400'
+                    : 'text-ember-500/60 group-hover:text-ember-400'
+                }`}>
+                  <feature.icon size={28} strokeWidth={1.5} />
+                </div>
+
+                {/* Title + mobile chevron */}
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <h3 className="font-display text-xl lg:text-2xl text-cream-50 tracking-wide leading-tight">
+                    {feature.title.toUpperCase()}
+                  </h3>
+                  <ChevronDown
+                    size={16}
+                    strokeWidth={1.5}
+                    className={`shrink-0 mt-1 text-cream-50/30 transition-transform duration-300 lg:hidden ${isOpen ? 'rotate-180 text-ember-400' : ''}`}
+                  />
+                </div>
+
+                {/* Description — always visible on desktop, toggle on mobile */}
+                <div className={`overflow-hidden transition-all duration-300 lg:block ${isOpen ? 'max-h-48' : 'max-h-0 lg:max-h-none'}`}>
+                  <p className="font-serif text-cream-100/65 text-base leading-relaxed group-hover:text-cream-100/85 transition-colors duration-300">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
-
-              {/* Title */}
-              <h3 className="font-display text-xl lg:text-2xl text-cream-50 tracking-wide mb-3 leading-tight">
-                {feature.title.toUpperCase()}
-              </h3>
-
-              {/* Description */}
-              <p className="font-serif text-cream-100/65 text-base leading-relaxed group-hover:text-cream-100/85 transition-colors duration-300">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
