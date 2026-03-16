@@ -46,7 +46,7 @@ export default function ContactSection() {
           }`}>
             NEEM <span className="text-ember-500">CONTACT</span> OP
           </h2>
-          <p className={`font-serif text-lg sm:text-xl italic text-cream-100/40 max-w-md mx-auto transition-all duration-1000 delay-200 ${
+          <p className={`font-serif text-lg sm:text-xl italic text-cream-100/65 max-w-md mx-auto transition-all duration-1000 delay-200 ${
             isVisible ? 'opacity-100' : 'opacity-0'
           }`}>
             Vragen, boekingen of gewoon zin in kip? We horen graag van je.
@@ -78,7 +78,7 @@ export default function ContactSection() {
                   <p className="font-display text-xl sm:text-2xl text-cream-50 tracking-wide group-hover:text-ember-400 transition-colors duration-300">
                     {contact.label.toUpperCase()}
                   </p>
-                  <p className="font-serif text-cream-100/30 text-sm sm:text-base mt-0.5">
+                  <p className="font-serif text-cream-100/65 text-base sm:text-lg mt-0.5">
                     {contact.value}
                   </p>
                 </div>

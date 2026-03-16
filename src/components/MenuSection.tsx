@@ -214,7 +214,7 @@ export default function MenuSection() {
               <span className="text-ember-500">WE?</span>
             </h2>
             <p
-              className={`font-serif text-cream-100/40 text-lg max-w-xs transition-all duration-1000 delay-200 ${
+              className={`font-serif text-cream-100/65 text-lg max-w-xs transition-all duration-1000 delay-200 ${
                 isVisible ? 'opacity-100' : 'opacity-0'
               }`}
             >
@@ -279,7 +279,7 @@ export default function MenuSection() {
                       </span>
                     )}
                   </div>
-                  <p className="font-serif text-cream-100/30 text-sm group-hover:text-cream-100/50 transition-colors duration-300">
+                  <p className="font-serif text-cream-100/60 text-base group-hover:text-cream-100/80 transition-colors duration-300">
                     {item.description}
                   </p>
                 </div>

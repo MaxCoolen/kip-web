@@ -62,7 +62,7 @@ export default function AboutSection() {
             </h2>
           </div>
           <div className="lg:col-span-7 flex items-end">
-            <p className={`font-serif text-lg sm:text-xl text-cream-100/50 leading-relaxed max-w-lg transition-all duration-1000 delay-300 ${
+            <p className={`font-serif text-xl sm:text-2xl text-cream-100/70 leading-relaxed max-w-lg transition-all duration-1000 delay-300 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}>
               Kip 'N Grill is een foodtruck gespecialiseerd in vers gegrilde kip van het spit.
@@ -101,7 +101,7 @@ export default function AboutSection() {
               </h3>
 
               {/* Description */}
-              <p className="font-serif text-cream-100/35 text-sm leading-relaxed group-hover:text-cream-100/55 transition-colors duration-300">
+              <p className="font-serif text-cream-100/65 text-base leading-relaxed group-hover:text-cream-100/85 transition-colors duration-300">
                 {feature.description}
               </p>
             </div>
