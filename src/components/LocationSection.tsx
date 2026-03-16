@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Calendar, PartyPopper, Clock, MapPin, ChevronRight } from 'lucide-react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import BookingModal from './BookingModal'
 
 type MarketId = 'dinsdag' | 'woensdag'
 
@@ -41,8 +42,11 @@ const extras = [
 export default function LocationSection() {
   const { ref, isVisible } = useScrollReveal()
   const [activeMarket, setActiveMarket] = useState<MarketId>('dinsdag')
+  const [bookingOpen, setBookingOpen] = useState(false)
 
   return (
+    <>
+    {bookingOpen && <BookingModal onClose={() => setBookingOpen(false)} />}
     <section id="locaties" className="relative bg-soot-800 py-24 sm:py-32 overflow-hidden">
       {/* Ambient glow */}
       <div
@@ -235,18 +239,19 @@ export default function LocationSection() {
         <div className={`text-center transition-all duration-1000 delay-700 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          <a
-            href="#contact"
+          <button
+            onClick={() => setBookingOpen(true)}
             className="group relative inline-flex items-center gap-3 px-10 py-4 bg-ember-500 text-cream-50 font-display text-lg tracking-[0.2em] overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(234,88,12,0.3)]"
             style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
           >
             <Calendar size={18} strokeWidth={1.5} className="relative z-10" />
             <span className="relative z-10">BOEK ONS</span>
             <div className="absolute inset-0 bg-ember-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-          </a>
+          </button>
         </div>
 
       </div>
     </section>
+    </>
   )
 }

@@ -1,5 +1,7 @@
-import { Instagram, Mail, Phone, ArrowUpRight } from 'lucide-react'
+import { useState } from 'react'
+import { Instagram, Mail, Phone, ArrowUpRight, Calendar } from 'lucide-react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import BookingModal from './BookingModal'
 
 const contactLinks = [
   {
@@ -11,21 +13,24 @@ const contactLinks = [
   {
     icon: Mail,
     label: 'E-mail',
-    value: 'info@kipngrill.nl',
-    href: 'mailto:info@kipngrill.nl',
+    value: 'kipngrill@gmail.com',
+    href: 'mailto:kipngrill@gmail.com',
   },
   {
     icon: Phone,
     label: 'Telefoon',
-    value: '06 - 1234 5678',
-    href: 'tel:+31612345678',
+    value: '06 - 1868 2922',
+    href: 'tel:+31618682922',
   },
 ]
 
 export default function ContactSection() {
   const { ref, isVisible } = useScrollReveal()
+  const [bookingOpen, setBookingOpen] = useState(false)
 
   return (
+    <>
+    {bookingOpen && <BookingModal onClose={() => setBookingOpen(false)} />}
     <section id="contact" className="relative bg-soot-900 py-24 sm:py-32 overflow-hidden">
       {/* Background glow */}
       <div
@@ -51,6 +56,21 @@ export default function ContactSection() {
           }`}>
             Vragen, boekingen of gewoon zin in kip? We horen graag van je.
           </p>
+        </div>
+
+        {/* Booking CTA */}
+        <div className={`mb-8 transition-all duration-1000 delay-100 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <button
+            onClick={() => setBookingOpen(true)}
+            className="group relative w-full flex items-center justify-center gap-3 px-10 py-5 bg-ember-500 text-cream-50 font-display text-xl tracking-[0.2em] overflow-hidden transition-all duration-300 hover:shadow-[0_0_50px_rgba(234,88,12,0.35)]"
+            style={{ clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))' }}
+          >
+            <Calendar size={20} strokeWidth={1.5} className="relative z-10" />
+            <span className="relative z-10">STUUR EEN BOEKINGSAANVRAAG</span>
+            <div className="absolute inset-0 bg-ember-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+          </button>
         </div>
 
         {/* Contact links — large clickable blocks */}
@@ -92,5 +112,6 @@ export default function ContactSection() {
         </div>
       </div>
     </section>
+    </>
   )
 }
