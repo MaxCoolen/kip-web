@@ -148,6 +148,7 @@ export default function LocationSection() {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
+                  sandbox="allow-presentation allow-same-origin allow-scripts"
                   title={`Map ${market.name}`}
                 />
               ))}

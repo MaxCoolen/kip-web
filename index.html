@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kip 'N Grill — Vers gegrilde kip van het spit</title>
     <meta name="description" content="Kip 'N Grill foodtruck — vers gegrilde kip van het spit. Hele kippen, wings, loaded chicken broodjes en meer." />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self' 'wasm-unsafe-eval';
+               style-src 'self' 'unsafe-inline';
+               img-src 'self' data: https:;
+               font-src 'self' https://fonts.gstatic.com;
+               connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://maps.google.com;
+               frame-src https://maps.google.com;" />
   </head>
   <body>
     <div id="root"></div>

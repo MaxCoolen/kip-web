@@ -205,7 +205,7 @@ function AddressAutocomplete({ value, onChange, placeholder }: { value: string; 
       try {
         const res = await fetch(
           `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=5&addressdetails=1&countrycodes=nl`,
-          { headers: { 'Accept-Language': 'nl' } },
+          { headers: { 'Accept-Language': 'nl', 'User-Agent': 'KipNGrill/1.0' } },
         )
         const data: Array<{ display_name: string }> = await res.json()
         const mapped = data.map((r) => ({
