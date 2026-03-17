@@ -1,0 +1,105 @@
+[
+  {
+    "id": "gegrilde-kip-salade",
+    "title": "Gegrilde kip salade",
+    "category": "Grill",
+    "prepTime": 15,
+    "difficulty": "Makkelijk",
+    "tags": ["Salade", "Gezond", "Zomer"],
+    "description": "Frisse salade met gegrilde kip, avocado, cherrytomaatjes en een lichte citroendressing.",
+    "ingredients": [
+      "1 halve gegrilde kip (Kip 'N Grill)",
+      "1 avocado in plakken",
+      "150g cherrytomaatjes",
+      "Rucola en ijsbergsla",
+      "Sap van 1 citroen",
+      "2 el olijfolie",
+      "Zout en peper"
+    ],
+    "steps": [
+      "Haal het vlees van de kip en scheur in stukken.",
+      "Meng de sla, tomaten en avocado in een grote schaal.",
+      "Leg de kip erbovenop.",
+      "Besprenkel met citroen en olijfolie.",
+      "Breng op smaak met zout en peper."
+    ],
+    "publishedAt": "2026-03-10"
+  },
+  {
+    "id": "kippeling-bowl",
+    "title": "Kippeling bowl",
+    "category": "Fried Chicken",
+    "prepTime": 20,
+    "difficulty": "Makkelijk",
+    "tags": ["Bowl", "Rijst", "Snel"],
+    "description": "Voedzame bowl met rijst, knapperige kippeling, edamame en een sriracha-mayonaise.",
+    "ingredients": [
+      "1 portie Kippeling (Kip 'N Grill)",
+      "200g gekookte witte rijst",
+      "100g edamame (diepvries, ontdooid)",
+      "1 wortel, geraspt",
+      "2 el sriracha-mayonaise",
+      "Sesamzaad en lente-ui"
+    ],
+    "steps": [
+      "Kook de rijst volgens de aanwijzingen.",
+      "Warm de kippeling op (zie opwarmadvies).",
+      "Verdeel de rijst over een kom.",
+      "Leg kippeling, edamame en wortel erop.",
+      "Sprenkel de sriracha-mayo erover en garneer met sesamzaad."
+    ],
+    "publishedAt": "2026-03-03"
+  },
+  {
+    "id": "pulled-chicken-wrap",
+    "title": "Pulled chicken wrap",
+    "category": "Grill",
+    "prepTime": 10,
+    "difficulty": "Makkelijk",
+    "tags": ["Wrap", "Lunch", "Snel"],
+    "description": "Snelle lunch-wrap met sappige gegrilde kip, tzatziki en verse groenten.",
+    "ingredients": [
+      "1 halve gegrilde kip (Kip 'N Grill)",
+      "2 grote wraps",
+      "4 el tzatziki",
+      "Komkommer in reepjes",
+      "Rode ui in ringen",
+      "Verse munt"
+    ],
+    "steps": [
+      "Trek het kipvlees van het bot en scheur in stukken.",
+      "Besmeer elke wrap met tzatziki.",
+      "Verdeel de kip, komkommer, rode ui en munt erover.",
+      "Rol de wraps strak op en snijd schuin door.",
+      "Serveer direct."
+    ],
+    "publishedAt": "2026-02-24"
+  },
+  {
+    "id": "hot-wings-pasta",
+    "title": "Hot wings pasta",
+    "category": "Fried Chicken",
+    "prepTime": 25,
+    "difficulty": "Gemiddeld",
+    "tags": ["Pasta", "Pittig", "Diner"],
+    "description": "Romige pasta met heet gesausd kippenvlees van de hot wings — comfortfood op zijn best.",
+    "ingredients": [
+      "10 hot wings (Kip 'N Grill)",
+      "300g penne",
+      "200ml slagroom",
+      "2 teentjes knoflook",
+      "1 el boter",
+      "Geraspte Parmezaan",
+      "Peterselie",
+      "Zout en peper"
+    ],
+    "steps": [
+      "Kook de pasta al dente.",
+      "Haal het vlees van de hot wings.",
+      "Fruit knoflook in boter, voeg slagroom toe en laat inkoken.",
+      "Voeg het kippenvlees toe en roer goed.",
+      "Meng met de pasta, bestrooi met Parmezaan en peterselie."
+    ],
+    "publishedAt": "2026-02-17"
+  }
+]

@@ -3,21 +3,15 @@ import {
   X, Send, CheckCircle, AlertCircle,
   ChevronLeft, ChevronRight, ChevronDown, Plus, Minus, MapPin, CalendarDays,
 } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
+import { booking } from '../i18n/translations'
 
 const FORMSPREE_ID = 'https://formspree.io/f/xaqppkpo'
 
-const eventTypes = [
-  'Bedrijfsfeest', 'Bruiloft', 'Verjaardag / Privéfeest',
-  'Festival', 'Markt', 'Anders',
-]
-
-const DAYS = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo']
-const MONTHS = [
-  'Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni',
-  'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December',
-]
-
 type Status = 'idle' | 'sending' | 'success' | 'error'
+
+// tx is passed as a prop to sub-components to avoid calling useLanguage deep in tree
+type BookingTx = typeof booking['nl']
 
 function isSameDay(a: Date, b: Date) {
   return a.getDate() === b.getDate()
@@ -25,15 +19,15 @@ function isSameDay(a: Date, b: Date) {
     && a.getFullYear() === b.getFullYear()
 }
 
-function formatDateNL(d: Date) {
-  return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' })
+function formatDate(d: Date, locale: string) {
+  return d.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
 // ── Collapsible multi-date picker ─────────────────────────────────────────────
 
 function MultiDatePicker({
-  selected, onChange,
-}: { selected: Date[]; onChange: (dates: Date[]) => void }) {
+  selected, onChange, tx,
+}: { selected: Date[]; onChange: (dates: Date[]) => void; tx: BookingTx }) {
   const [open, setOpen] = useState(false)
   const today = new Date(); today.setHours(0, 0, 0, 0)
 
@@ -62,7 +56,6 @@ function MultiDatePicker({
 
   return (
     <div>
-      {/* Toggle trigger */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -73,9 +66,7 @@ function MultiDatePicker({
         <div className="flex items-center gap-3">
           <CalendarDays size={15} strokeWidth={1.5} className="text-ember-500/60 shrink-0" />
           <span className="font-serif text-base text-cream-50/60">
-            {selected.length === 0
-              ? 'Kies datum(s)...'
-              : `${selected.length} datum${selected.length > 1 ? 's' : ''} geselecteerd`}
+            {selected.length === 0 ? tx.placeholders.datums : tx.datumSelected(selected.length)}
           </span>
         </div>
         <ChevronDown
@@ -85,40 +76,26 @@ function MultiDatePicker({
         />
       </button>
 
-      {/* Calendar panel */}
       {open && (
         <div className="bg-soot-800 border border-cream-50/10 border-t-0 px-4 pb-4 pt-3">
-          {/* Month nav */}
           <div className="flex items-center justify-between mb-3">
-            <button
-              type="button"
-              onClick={() => setView(new Date(year, month - 1, 1))}
-              className="p-1 text-cream-50/30 hover:text-cream-50/70 transition-colors"
-            >
+            <button type="button" onClick={() => setView(new Date(year, month - 1, 1))} className="p-1 text-cream-50/30 hover:text-cream-50/70 transition-colors">
               <ChevronLeft size={14} strokeWidth={1.5} />
             </button>
             <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-cream-50/50">
-              {MONTHS[month]} {year}
+              {tx.months[month]} {year}
             </span>
-            <button
-              type="button"
-              onClick={() => setView(new Date(year, month + 1, 1))}
-              className="p-1 text-cream-50/30 hover:text-cream-50/70 transition-colors"
-            >
+            <button type="button" onClick={() => setView(new Date(year, month + 1, 1))} className="p-1 text-cream-50/30 hover:text-cream-50/70 transition-colors">
               <ChevronRight size={14} strokeWidth={1.5} />
             </button>
           </div>
 
-          {/* Weekday headers */}
           <div className="grid grid-cols-7 mb-1">
-            {DAYS.map((d) => (
-              <div key={d} className="text-center font-mono text-[9px] tracking-widest text-cream-50/30 py-1">
-                {d}
-              </div>
+            {tx.days.map((d) => (
+              <div key={d} className="text-center font-mono text-[9px] tracking-widest text-cream-50/30 py-1">{d}</div>
             ))}
           </div>
 
-          {/* Day cells */}
           <div className="grid grid-cols-7 gap-0.5">
             {cells.map((day, i) => {
               if (!day) return <div key={`empty-${i}`} />
@@ -127,20 +104,15 @@ function MultiDatePicker({
               const isSelected = selected.some((d) => isSameDay(d, date))
               return (
                 <button
-                  key={day}
-                  type="button"
-                  onClick={() => toggle(day)}
-                  disabled={isPast}
-                  title={isPast ? 'Datum in het verleden' : undefined}
-                  className={`
-                    aspect-square flex items-center justify-center font-mono text-[11px] transition-all duration-150 rounded-sm
-                    ${isPast
+                  key={day} type="button" onClick={() => toggle(day)} disabled={isPast}
+                  title={isPast ? tx.pastDate : undefined}
+                  className={`aspect-square flex items-center justify-center font-mono text-[11px] transition-all duration-150 rounded-sm ${
+                    isPast
                       ? 'text-cream-50/15 cursor-not-allowed line-through decoration-cream-50/10'
                       : isSelected
                         ? 'bg-ember-500 text-cream-50 font-bold hover:bg-ember-600 cursor-pointer'
                         : 'text-cream-50/70 hover:bg-soot-700 hover:text-cream-50 cursor-pointer'
-                    }
-                  `}
+                  }`}
                 >
                   {day}
                 </button>
@@ -150,22 +122,12 @@ function MultiDatePicker({
         </div>
       )}
 
-      {/* Selected chips — always visible */}
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-2">
           {selected.map((date) => (
-            <span
-              key={date.toISOString()}
-              className="inline-flex items-center gap-1 font-mono text-[9px] tracking-[0.1em] bg-ember-500/12 border border-ember-500/25 text-ember-400 px-2 py-1"
-            >
-              {formatDateNL(date)}
-              <button
-                type="button"
-                onClick={() => onChange(selected.filter((d) => !isSameDay(d, date)))}
-                className="text-ember-400/50 hover:text-ember-300 transition-colors ml-0.5"
-              >
-                ×
-              </button>
+            <span key={date.toISOString()} className="inline-flex items-center gap-1 font-mono text-[9px] tracking-[0.1em] bg-ember-500/12 border border-ember-500/25 text-ember-400 px-2 py-1">
+              {formatDate(date, tx.dateLocale)}
+              <button type="button" onClick={() => onChange(selected.filter((d) => !isSameDay(d, date)))} className="text-ember-400/50 hover:text-ember-300 transition-colors ml-0.5">×</button>
             </span>
           ))}
         </div>
@@ -178,7 +140,7 @@ function MultiDatePicker({
 
 const MIN_GUESTS = 50
 
-function GuestsCounter({ value, onChange }: { value: number; onChange: (n: number) => void }) {
+function GuestsCounter({ value, onChange, gastenLabel }: { value: number; onChange: (n: number) => void; gastenLabel: string }) {
   return (
     <div className="flex items-center gap-3">
       <button
@@ -200,7 +162,7 @@ function GuestsCounter({ value, onChange }: { value: number; onChange: (n: numbe
           className="w-full bg-soot-800 border border-cream-50/10 text-cream-50/85 font-display text-2xl tracking-wider text-center px-3 py-2.5 focus:border-ember-500/50 focus:outline-none transition-colors duration-200 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 font-serif text-xs text-cream-50/25 pointer-events-none">
-          gasten
+          {gastenLabel}
         </span>
       </div>
 
@@ -220,7 +182,7 @@ function GuestsCounter({ value, onChange }: { value: number; onChange: (n: numbe
 
 type Suggestion = { display_name: string; short: string }
 
-function AddressAutocomplete({ value, onChange }: { value: string; onChange: (val: string) => void }) {
+function AddressAutocomplete({ value, onChange, placeholder }: { value: string; onChange: (val: string) => void; placeholder?: string }) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [open, setOpen] = useState(false)
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -267,7 +229,7 @@ function AddressAutocomplete({ value, onChange }: { value: string; onChange: (va
         <input
           type="text" value={value} onChange={handleInput}
           onFocus={() => suggestions.length > 0 && setOpen(true)}
-          placeholder="Begin met typen..." required
+          placeholder={placeholder ?? 'Begin met typen...'} required
           className="w-full bg-soot-800 border border-cream-50/10 text-cream-50/85 font-serif text-base pl-9 pr-4 py-3 focus:border-ember-500/50 focus:outline-none transition-colors duration-200 placeholder:text-cream-50/20"
         />
       </div>
@@ -310,6 +272,9 @@ function Field({ label, name, value, onChange, type = 'text', required, placehol
 // ── Main modal ────────────────────────────────────────────────────────────────
 
 export default function BookingModal({ onClose }: { onClose: () => void }) {
+  const { lang } = useLanguage()
+  const tx = booking[lang]
+
   const [form, setForm] = useState({ naam: '', email: '', telefoon: '', type: '', locatie: '', bericht: '' })
   const [selectedDates, setSelectedDates] = useState<Date[]>([])
   const [gasten, setGasten] = useState(MIN_GUESTS)
@@ -327,8 +292,8 @@ export default function BookingModal({ onClose }: { onClose: () => void }) {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           ...form,
-          gasten: `${gasten} gasten`,
-          datum: selectedDates.length > 0 ? selectedDates.map(formatDateNL).join(', ') : 'Niet opgegeven',
+          gasten: `${gasten} ${tx.gastenLabel}`,
+          datum: selectedDates.length > 0 ? selectedDates.map((d) => formatDate(d, tx.dateLocale)).join(', ') : '-',
         }),
       })
       setStatus(res.ok ? 'success' : 'error')
@@ -348,15 +313,14 @@ export default function BookingModal({ onClose }: { onClose: () => void }) {
         <div className="h-[2px] bg-gradient-to-r from-ember-500 via-ember-400 to-transparent" />
 
         <div className="p-6 sm:p-10">
-          {/* Header */}
           <div className="flex items-start justify-between mb-8">
             <div>
-              <span className="font-mono text-[10px] tracking-[0.3em] text-ember-500 uppercase block mb-2">// Boekingsaanvraag</span>
+              <span className="font-mono text-[10px] tracking-[0.3em] text-ember-500 uppercase block mb-2">{tx.label}</span>
               <h2 className="font-display text-4xl sm:text-5xl text-cream-50 tracking-wide leading-none">
-                BOEK <span className="text-ember-500">ONS</span>
+                {tx.title1} <span className="text-ember-500">{tx.title2}</span>
               </h2>
             </div>
-            <button onClick={onClose} className="text-cream-50/25 hover:text-cream-50/70 transition-colors p-1 mt-1" aria-label="Sluiten">
+            <button onClick={onClose} className="text-cream-50/25 hover:text-cream-50/70 transition-colors p-1 mt-1" aria-label={tx.closeLabel}>
               <X size={22} strokeWidth={1.5} />
             </button>
           </div>
@@ -364,65 +328,59 @@ export default function BookingModal({ onClose }: { onClose: () => void }) {
           {status === 'success' ? (
             <div className="text-center py-12">
               <CheckCircle size={52} className="text-ember-400 mx-auto mb-5" strokeWidth={1} />
-              <h3 className="font-display text-3xl text-cream-50 tracking-wide mb-3">AANVRAAG ONTVANGEN</h3>
-              <p className="font-serif text-cream-100/60 text-lg leading-relaxed">Bedankt! We nemen zo snel mogelijk contact met je op.</p>
+              <h3 className="font-display text-3xl text-cream-50 tracking-wide mb-3">{tx.successTitle}</h3>
+              <p className="font-serif text-cream-100/60 text-lg leading-relaxed">{tx.successBody}</p>
               <button onClick={onClose} className="mt-8 font-mono text-[10px] tracking-[0.25em] text-ember-400 hover:text-ember-300 uppercase transition-colors">
-                Sluiten →
+                {tx.closeBtn}
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
 
-              {/* Naam + E-mail */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <Field label="Naam *" name="naam" value={form.naam} onChange={handleChange} required placeholder="Jan de Vries" />
-                <Field label="E-mail *" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="jan@email.nl" />
+                <Field label={tx.fields.naam} name="naam" value={form.naam} onChange={handleChange} required placeholder={tx.placeholders.naam} />
+                <Field label={tx.fields.email} name="email" type="email" value={form.email} onChange={handleChange} required placeholder={tx.placeholders.email} />
               </div>
 
-              {/* Telefoon + Type */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <Field label="Telefoonnummer *" name="telefoon" type="tel" value={form.telefoon} onChange={handleChange} required placeholder="06 12345678" />
+                <Field label={tx.fields.telefoon} name="telefoon" type="tel" value={form.telefoon} onChange={handleChange} required placeholder={tx.placeholders.telefoon} />
                 <div>
-                  <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">Type evenement *</label>
+                  <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">{tx.fields.type}</label>
                   <div className="relative">
                     <select
                       name="type" value={form.type} onChange={handleChange} required
                       className="w-full appearance-none bg-soot-800 border border-cream-50/10 text-cream-50/85 font-serif text-base px-4 py-3 focus:border-ember-500/50 focus:outline-none transition-colors cursor-pointer"
                     >
-                      <option value="" className="bg-soot-800">Kies een type...</option>
-                      {eventTypes.map((t) => <option key={t} value={t} className="bg-soot-800">{t}</option>)}
+                      <option value="" className="bg-soot-800">{tx.placeholders.type}</option>
+                      {tx.eventTypes.map((t) => <option key={t} value={t} className="bg-soot-800">{t}</option>)}
                     </select>
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-cream-50/30 text-sm">▾</div>
                   </div>
                 </div>
               </div>
 
-              {/* Datum */}
               <div>
-                <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">Datum / Datums</label>
-                <MultiDatePicker selected={selectedDates} onChange={setSelectedDates} />
+                <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">{tx.fields.datum}</label>
+                <MultiDatePicker selected={selectedDates} onChange={setSelectedDates} tx={tx} />
               </div>
 
-              {/* Gasten */}
               <div>
                 <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">
-                  Verwacht aantal gasten * <span className="normal-case text-cream-50/20">(min. {MIN_GUESTS})</span>
+                  {tx.fields.gasten} <span className="normal-case text-cream-50/20">{tx.fields.gastenMin}</span>
                 </label>
-                <GuestsCounter value={gasten} onChange={setGasten} />
+                <GuestsCounter value={gasten} onChange={setGasten} gastenLabel={tx.gastenLabel} />
               </div>
 
-              {/* Locatie */}
               <div>
-                <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">Locatie / Adres *</label>
-                <AddressAutocomplete value={form.locatie} onChange={(val) => setForm((p) => ({ ...p, locatie: val }))} />
+                <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">{tx.fields.locatie}</label>
+                <AddressAutocomplete value={form.locatie} onChange={(val) => setForm((p) => ({ ...p, locatie: val }))} placeholder={tx.placeholders.adres} />
               </div>
 
-              {/* Bericht */}
               <div>
-                <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">Bericht / Extra informatie</label>
+                <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-cream-50/40 block mb-2">{tx.fields.bericht}</label>
                 <textarea
                   name="bericht" value={form.bericht} onChange={handleChange} rows={3}
-                  placeholder="Specifieke wensen, dieetwensen, overige informatie..."
+                  placeholder={tx.placeholders.bericht}
                   className="w-full bg-soot-800 border border-cream-50/10 text-cream-50/85 font-serif text-base px-4 py-3 focus:border-ember-500/50 focus:outline-none transition-colors resize-none placeholder:text-cream-50/20"
                 />
               </div>
@@ -430,7 +388,7 @@ export default function BookingModal({ onClose }: { onClose: () => void }) {
               {status === 'error' && (
                 <div className="flex items-center gap-3 text-ember-500/80 font-serif text-sm">
                   <AlertCircle size={16} strokeWidth={1.5} />
-                  Er ging iets mis. Probeer opnieuw of mail ons op kipngrill@gmail.com.
+                  {tx.errorMsg}
                 </div>
               )}
 
@@ -442,7 +400,7 @@ export default function BookingModal({ onClose }: { onClose: () => void }) {
                 >
                   <span className="relative z-10 flex items-center justify-center gap-3">
                     <Send size={16} strokeWidth={1.5} />
-                    {status === 'sending' ? 'VERSTUREN...' : 'VERSTUUR AANVRAAG'}
+                    {status === 'sending' ? tx.submitSending : tx.submitIdle}
                   </span>
                   <div className="absolute inset-0 bg-ember-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 </button>

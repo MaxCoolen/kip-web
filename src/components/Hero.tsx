@@ -1,4 +1,6 @@
 import { ChevronDown } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
+import { hero } from '../i18n/translations'
 
 function Ember({ style }: { style: React.CSSProperties }) {
   return (
@@ -14,7 +16,9 @@ function Ember({ style }: { style: React.CSSProperties }) {
 }
 
 export default function Hero() {
-  // Embers concentrated in the center-lower zone — aligned with the fire in the photo
+  const { lang } = useLanguage()
+  const tx = hero[lang]
+
   const embers = Array.from({ length: 22 }, () => ({
     left: `${25 + Math.random() * 50}%`,
     top: `${48 + Math.random() * 30}%`,
@@ -29,8 +33,6 @@ export default function Hero() {
 
       {/* ── BACKGROUND ── */}
       <div className="absolute inset-0">
-
-        {/* Photo — object-position shows chickens on spit + fire below */}
         <img
           src="/hero-bg.jpg"
           alt=""
@@ -38,11 +40,7 @@ export default function Hero() {
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: 'center 38%' }}
         />
-
-        {/* Base darkening — very subtle, image is already moody */}
         <div className="absolute inset-0 bg-soot-950/45" />
-
-        {/* Top gradient — deep dark so logo reads clearly */}
         <div
           className="absolute top-0 left-0 right-0 h-[65%]"
           style={{
@@ -50,11 +48,7 @@ export default function Hero() {
               'linear-gradient(to bottom, rgba(10,8,6,0.92) 0%, rgba(10,8,6,0.55) 35%, rgba(10,8,6,0.1) 70%, transparent 100%)',
           }}
         />
-
-        {/* Bottom fade — blends into next section */}
         <div className="absolute bottom-0 left-0 right-0 h-56 bg-gradient-to-t from-soot-900 to-transparent" />
-
-        {/* Side vignette — keeps eye centered on the fire */}
         <div
           className="absolute inset-0"
           style={{
@@ -62,8 +56,6 @@ export default function Hero() {
               'radial-gradient(ellipse at 50% 50%, transparent 38%, rgba(10,8,6,0.65) 100%)',
           }}
         />
-
-        {/* Ember glow overlay — blends with the actual flames in the photo */}
         <div
           className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[100%] h-[55%] opacity-50"
           style={{
@@ -71,8 +63,6 @@ export default function Hero() {
               'radial-gradient(ellipse at 50% 80%, rgba(234,88,12,0.22) 0%, rgba(245,158,11,0.06) 45%, transparent 70%)',
           }}
         />
-
-        {/* Subtle smoke drift at top */}
         <div
           className="absolute top-0 left-0 w-full h-2/5 opacity-15 animate-float"
           style={{
@@ -89,7 +79,7 @@ export default function Hero() {
         />
       </div>
 
-      {/* ── EMBER PARTICLES — rise from the fire zone ── */}
+      {/* ── EMBER PARTICLES ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {embers.map((s, i) => (
           <Ember key={i} style={s} />
@@ -98,8 +88,6 @@ export default function Hero() {
 
       {/* ── CONTENT ── */}
       <div className="relative z-10 text-center px-5 sm:px-8 max-w-5xl mx-auto">
-
-        {/* Logo */}
         <div className="mb-8 animate-scale-in">
           <img
             src="/logo-full.png"
@@ -111,15 +99,13 @@ export default function Hero() {
           />
         </div>
 
-        {/* Tagline */}
         <p
           className="font-serif text-xl sm:text-2xl md:text-3xl text-cream-100/80 italic tracking-wide mb-4 animate-fade-up opacity-0"
           style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}
         >
-          Vers gegrilde kip van het spit
+          {tx.tagline}
         </p>
 
-        {/* Decorative divider */}
         <div
           className="flex items-center justify-center gap-4 mb-10 animate-fade-up opacity-0"
           style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}
@@ -129,7 +115,6 @@ export default function Hero() {
           <div className="h-px w-16 bg-gradient-to-l from-transparent to-ember-500/50" />
         </div>
 
-        {/* CTAs */}
         <div
           className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-fade-up opacity-0"
           style={{ animationDelay: '0.8s', animationFillMode: 'forwards' }}
@@ -139,7 +124,7 @@ export default function Hero() {
             className="group relative px-10 py-4 bg-ember-500 text-cream-50 font-display text-lg tracking-[0.2em] overflow-hidden transition-all duration-300 hover:shadow-[0_0_50px_rgba(234,88,12,0.5)]"
             style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
           >
-            <span className="relative z-10">BEKIJK MENU</span>
+            <span className="relative z-10">{tx.cta1}</span>
             <div className="absolute inset-0 bg-ember-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           </a>
           <a
@@ -147,12 +132,11 @@ export default function Hero() {
             className="group relative px-10 py-4 border border-cream-50/25 text-cream-50/85 font-display text-lg tracking-[0.2em] hover:border-ember-500/60 hover:text-ember-400 transition-all duration-300 backdrop-blur-[2px]"
             style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
           >
-            VIND ONS
+            {tx.cta2}
           </a>
         </div>
       </div>
 
-      {/* Scroll indicator */}
       <a
         href="#over-ons"
         className="absolute bottom-10 left-1/2 -translate-x-1/2 text-cream-50/25 hover:text-ember-400 transition-colors duration-300 animate-bounce"
